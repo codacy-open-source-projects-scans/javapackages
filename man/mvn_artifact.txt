@@ -1,0 +1,64 @@
+mvn_artifact(7)
+===============
+:doctype:	manpage
+:man source:	JAVAPACKAGES
+:man manual:	Java Packages Tools
+
+NAME
+----
+mvn_artifact - request installation of Maven artifact
+
+SYNOPSIS
+--------
+*%mvn_artifact* [options] model [artifact-file]
+
+*%mvn_artifact* [options] artifact-coordinates artifact-file
+
+DESCRIPTION
+-----------
+*mvn_artifact* macro marks specified Maven artifact to be installed by
+further call to *mvn_install*.  Multiple calls to *mvn_artifact*
+and/or *mvn_build* can be made to request installation of multiple
+artifacts.
+
+OPTIONS
+-------
+*--skip-dependencies*::
+    Do not try to gather list of dependencies for given Maven artifact.
+
+*-Dproperty=value*::
+    Add artifact property
+
+OPERANDS
+--------
+*model*::
+    Path to raw project object model (POM) file to be associated and
+    installed with artifact.
+
+*artifact-file*::
+    Path to file to be used as artifact file.  If omitted then no
+    artifact file is installed.
+
+*artifact-coordinates*::
+    Artifact coordinates specify artifact to be installed. If
+    specified then no model file is installed with artifact.
+    Coordinates are in format
+    *groupId:artifactId[:extension[:classifier]]:version*. If extension
+    is omitted then "jar" is used.  If classifier is omitted then
+    empty classifier is used.  For more information see XMvn
+    Configuration Reference.
+
+AUTHOR
+------
+Written by Michal Srb.
+
+REPORTING BUGS
+--------------
+Bugs should be reported through Java Packages Tools issue tracker at
+Github: https://github.com/fedora-java/javapackages/issues.
+
+SEE ALSO
+--------
+*gradle_build*(7),
+*mvn_build*(7),
+*mvn_install*(7).

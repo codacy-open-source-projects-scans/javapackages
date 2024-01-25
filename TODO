@@ -1,0 +1,37 @@
+-*- outline -*-
+
+
+* TASKS
+
+** Include ivy-local in package diagram
+
+** Add more tests for new metadata
+
+** Test/improve Ivy support in mvn_artifact
+
+** Move POM related classes from artifact.py to separate (sub)module/library(?)
+
+** changes around OSGi prov/req generators need some tests
+
+** implement recommends and suggests generators
+
+* BUGS
+
+** Add testcase for pom properties with whitespace
+
+** Fix version in python/setup.py
+
+** builddep.py bug
+
+   Traceback (most recent call last):
+     File "java-utils/builddep.py", line 65, in <module>
+       art = Artifact.from_xml_element(dep)
+     File "/usr/lib/python2.7/site-packages/javapackages/artifact.py", line 193, in from_xml_element
+       parts[key] = node.text.strip()
+
+** Implement additional test cases
+
+   https://bugzilla.redhat.com/buglist.cgi?product=Fedora&component=javapackages-tools&keywords=NeedsTestCase
+
+
+* FEATURES
