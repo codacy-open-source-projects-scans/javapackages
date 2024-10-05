@@ -124,49 +124,9 @@ _load_java_conf()
 }
 
 
-# Test default JRE/JVM roots if nothing is defined yet
-_set_java_home()
-{
-    local IFS=:
-    local jvmdir
-
-    if [ -n "${JAVA_HOME}" ]; then
-        return
-    fi
-
-    case "${_prefer_jre}" in
-        1|[Yy][Ee][Ss]|[Tt][Rr][Uu][Ee])
-            dirs="@{default_jre}:@{default_jdk}"
-            ;;
-        *)
-            dirs="@{default_jdk}:@{default_jre}"
-            ;;
-    esac
-
-    for JAVA_HOME in $dirs; do
-        if [ -d "${JAVA_HOME}" ]; then
-            _log "Using configured JAVA_HOME: ${JAVA_HOME}"
-            return
-        fi
-    done
-
-    unset JAVA_HOME
-}
-
-# Set the java virtual machine
+# Obsolete, does nothing
 set_jvm()
 {
-    local IFS=:
-    local javaconfdirs
-
-    _set_java_home
-
-    if [ -z "${JAVA_HOME}" ]; then
-        javaconfdirs="${JAVACONFDIRS:-@{javaconfdir}}"
-        _err "JAVA_HOME is not set and default java installation was not found. JAVA_HOME for system applications can be set in java.conf in ${javaconfdirs}"
-        exit 1
-    fi
-
     return 0
 }
 
@@ -174,8 +134,6 @@ set_jvm()
 set_classpath()
 {
     local IFS
-
-    _set_java_home
 
     # get local classpath first
     set -- "${@}" ${ADDITIONAL_JARS}
@@ -194,22 +152,22 @@ set_javacmd()
 	return
     fi
 
-    set_jvm
-
     # Add all sorts of jvm layouts here
-    for cmd in jre/sh/java jre/bin/java bin/java; do
-	JAVACMD="${JAVA_HOME}/${cmd}"
-	if [ -x "${JAVACMD}" ]; then
-	    _log "Using configured JAVACMD: $JAVACMD"
-	    if [ -n "${JAVACMD_OPTS}" ]; then
-		_log "Using java-wrapper with extra options: ${JAVACMD_OPTS}"
-		export _JP_JAVACMD="${JAVACMD}"
-		export _JP_JAVACMD_OPTS="${JAVACMD_OPTS}"
-		JAVACMD="@{javadir}-utils/java-wrapper"
-	    fi
-	    return 0
-	fi
-    done
+    if [ -n "${JAVA_HOME}" ]; then
+        for cmd in jre/sh/java jre/bin/java bin/java; do
+            JAVACMD="${JAVA_HOME}/${cmd}"
+            if [ -x "${JAVACMD}" ]; then
+                _log "Using configured JAVACMD: $JAVACMD"
+                if [ -n "${JAVACMD_OPTS}" ]; then
+                    _log "Using java-wrapper with extra options: ${JAVACMD_OPTS}"
+                    export _JP_JAVACMD="${JAVACMD}"
+                    export _JP_JAVACMD_OPTS="${JAVACMD_OPTS}"
+                    JAVACMD="@{javadir}-utils/java-wrapper"
+                fi
+                return 0
+            fi
+        done
+    fi
 
     JAVACMD=$(which java 2>/dev/null || :)
     if [ -x "${JAVACMD}" ]; then
@@ -267,11 +225,9 @@ run()
     eval "exec \"\${JAVACMD}\" ${FLAGS} -classpath \"\${CLASSPATH}\" ${OPTIONS} \"\${MAIN_CLASS}\" \"\${@}\""
 }
 
-# Set JVM-related directories
+# Obsolete, does nothing
 set_jvm_dirs()
 {
-    _set_java_home
-
     return 0
 }
 
@@ -406,12 +362,6 @@ find_jar()
 ## Checks java environment
 check_java_env()
 {
-    # This is usually set by set_jvm
-    if [ -z "${JAVA_HOME}" ]; then
-	_err "JAVA_HOME must be set"
-	return 1
-    fi
-
     if [ -z "${JAVACMD}" ]; then
 	_err "JAVACMD must be set"
 	return 2
