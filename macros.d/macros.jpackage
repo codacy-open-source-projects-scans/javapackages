@@ -10,11 +10,11 @@
 #==============================================================================
 # ---- default Java commands
 
-%ant            %{?jpb_env} JAVA_HOME=%{java_home} ant
-%jar            %{java_home}/bin/jar
-%java           %(. @{javadir}-utils/java-functions; set_javacmd; echo $JAVACMD)
-%javac          %{java_home}/bin/javac
-%javadoc        %{java_home}/bin/javadoc
+%ant            %{?jpb_env} %{?java_home:JAVA_HOME=%{java_home}} ant
+%jar            %{?java_home:%{java_home}/bin/}jar
+%java           %{?java_home:%{java_home}/bin/}java
+%javac          %{?java_home:%{java_home}/bin/}javac
+%javadoc        %{?java_home:%{java_home}/bin/}javadoc
 
 
 #
@@ -35,10 +35,10 @@ cat > %{buildroot}%{_bindir}/%5 << EOF \
 #\
 # %{name} script\
 # JPackage Project <http://www.jpackage.org/>\
-\
+%{?java_home:\
 # Set default JAVA_HOME\
-export JAVA_HOME="\\${JAVA_HOME:-%{?java_home}}"\
-\
+JAVA_HOME="\\${JAVA_HOME:-%{java_home}}"\
+}\
 # Source functions library\
 . @{javadir}-utils/java-functions\
 \
