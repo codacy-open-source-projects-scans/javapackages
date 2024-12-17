@@ -89,6 +89,7 @@ dir "${jnidir}"
 dir "${javadocdir}"
 dir "${mavenpomdir}"
 dir "${ivyxmldir}"
+dir "${jpbindingdir}"
 dir "${datadir}/maven-metadata"
 dir "${prefix}/lib/eclipse"
 dir "${prefix}/lib/eclipse/features"
@@ -125,6 +126,7 @@ inst_config target/eclipse.conf "${javaconfdir}"
 
 inst_data target/java-functions "${javadir}-utils"
 inst_exec java-utils/java-wrapper "${javadir}-utils"
+inst_exec target/jp_binding.sh "${javadir}-utils"
 
 inst_data target/macros.jpackage "${rpmmacrodir}"
 
@@ -138,9 +140,9 @@ inst_data target/find-jar.1 "${mandir}/man1"
 inst_data configs/configuration.xml "${m2home}"
 
 
-while IFS== read -d' ' id path; do
-    exec >files-local-"${id}"
-    inst_data target/macros.fjava-"${id}" "${rpmmacrodir}"
+while IFS== read -d' ' java_id java_path; do
+    exec >files-local-"${java_id}"
+    inst_data target/macros.java-"${java_id}" "${rpmmacrodir}"
 done <<<"${jvms}"
 
 
