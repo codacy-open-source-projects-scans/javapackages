@@ -1,0 +1,85 @@
+pom_remove_dep(7)
+=================
+:doctype:	manpage
+:man source:	JAVAPACKAGES
+:man manual:	Java Packages Tools
+
+NAME
+----
+pom_remove_dep - remove dependency on Maven artifact from POM file
+
+SYNOPSIS
+--------
+*%pom_remove_dep* [OPTIONS]
+\[groupId]**:**[artifactId][**:**version[**:**scope]] [POM-location]...
+
+*%pom_remove_dep* [OPTIONS]
+\[org]**:**[name][**:**rev[**:**conf[**:**transitive]]]
+[Ivy-module-location]...
+
+OPTIONS
+-------
+
+*-r*::
+Work in recursive mode. That means that dependency is also removed from
+all enabled submodules of given POM file(s).
+
+*-f*::
+Do not throw an error when one of the specified files doesn't contain
+given dependency.
+
+
+DESCRIPTION
+-----------
+This macro patches specified POM file not to contain dependencies on
+given Maven artifact.
+
+groupId and artifactId are identifiers of Maven group and artifact of
+the module on which dependency is to be removed.  If they are ommited
+then all identifiers are matched.
+
+When modifying Ivy modules, the org and name correspond to the Maven
+groupId and artifactId.
+
+POM location can be either a full path to the POM or Ivy file, or a path
+to the directory containing *pom.xml* or *ivy.xml*.  If POM location is
+not given then *pom.xml* or *ivy.xml* from current working directory is
+used. When both *pom.xml* and *ivy.xml* are present, *pom.xml* is
+processed. You can specify more file locations. If the dependency is not
+found in all of given files, the command raises an error. This can be
+overriden with the `-f` option.
+
+
+EXAMPLES
+--------
+*%pom_remove_dep com.example:* - this call removes dependency on all
+artifacts with groupId *com.example* from POM in current working
+directory.
+
+*%pom_remove_dep boo:bar target/location* - this call removes
+dependency on artifacts with groupId *foo* and artifactId *bar* from
+*target/location/pom.xml*.
+
+AUTHOR
+------
+Written by Mikolaj Izdebski.
+
+REPORTING BUGS
+--------------
+Bugs should be reported through Java Packages Tools issue tracker at
+Github: https://github.com/fedora-java/javapackages/issues.
+
+SEE ALSO
+--------
+*pom_add_dep*(7),
+*pom_add_parent*(7),
+*pom_add_plugin*(7),
+*pom_disable_module*(7),
+*pom_remove_parent*(7),
+*pom_remove_plugin*(7),
+*pom_change_dep*(7),
+*pom_set_parent*(7),
+*pom_xpath_inject*(7),
+*pom_xpath_remove*(7),
+*pom_xpath_replace*(7),
+*pom_xpath_set*(7).
